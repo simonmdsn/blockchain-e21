@@ -59,7 +59,8 @@ public class MerkleTree  {
     }
 
     private String hash(String msg) {
-        return bytesToHex(md.digest(msg.getBytes(StandardCharsets.UTF_8)));
+        byte[] digest = md.digest(msg.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(digest);
     }
 
     private String bytesToHex(byte[] bytes) {

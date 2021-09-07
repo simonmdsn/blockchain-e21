@@ -19,11 +19,14 @@ public class MerkleTreeTest {
             Leaf leftLeaf = new Leaf("left");
             Leaf rightLeaf = new Leaf("right");
 
+            Leaf left2 = new Leaf("left");
+            Leaf right2 = new Leaf("right");
+
 
             MerkleTree leftTree = new MerkleTree(instance);
             MerkleTree rightTree = new MerkleTree(instance);
             leftTree.add(leftLeaf, rightLeaf);
-            rightTree.add(leftLeaf, rightLeaf);
+            rightTree.add(left2, right2);
 
             merkleTree.add(leftTree, rightTree);
 
