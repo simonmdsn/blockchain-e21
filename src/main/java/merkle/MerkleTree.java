@@ -6,10 +6,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 @Getter
-public class MerkleTree  {
+public class MerkleTree {
 
     private final MessageDigest md;
-    private final Leaf root;
+    private String root;
     private MerkleTree leftTree;
     private MerkleTree rightTree;
     private Leaf leftLeaf;
@@ -19,7 +19,7 @@ public class MerkleTree  {
     // specify used digest
     public MerkleTree(MessageDigest md) {
         this.md = md;
-        this.root = new Leaf("");
+        this.root = hash("0");
         this.leftTree = null;
         this.rightTree = null;
         this.leftLeaf = null;
@@ -29,7 +29,7 @@ public class MerkleTree  {
     public void add(MerkleTree leftTree, MerkleTree rightTree) {
         this.leftTree = leftTree;
         this.rightTree = rightTree;
-        this.root.setHash(hash(leftTree.getRoot().getHash() + rightTree.getRoot().getHash()));
+        this.root = (hash(leftTree.getRoot() + rightTree.getRoot()));
     }
 
     public void add(Leaf leftLeaf, Leaf rightLeaf) {
@@ -37,18 +37,18 @@ public class MerkleTree  {
         this.rightLeaf = rightLeaf;
         this.leftLeaf.setHash(hash(leftLeaf.getHash()));
         this.rightLeaf.setHash(hash(rightLeaf.getHash()));
-        this.root.setHash(hash(leftLeaf.getHash() + rightLeaf.getHash()));
+        this.root = (hash(leftLeaf.getHash() + rightLeaf.getHash()));
     }
 
 
     // Return the root node digest
     public byte[] digest() {
-        return root.getHash().getBytes(StandardCharsets.UTF_8);
+        return root.getBytes(StandardCharsets.UTF_8);
     }
 
     // Prints the tree from the root node
     public void printTree() {
-        System.out.println("Root hash: " + root.getHash());
+        System.out.println("Root hash: " + root);
 
         if (leftLeaf != null && rightLeaf != null) {
             System.out.println("Left leaf: " + leftLeaf.getHash() + "\t" + "Right leaf: " + rightLeaf.getHash());
