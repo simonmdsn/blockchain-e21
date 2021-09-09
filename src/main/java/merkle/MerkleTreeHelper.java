@@ -14,7 +14,7 @@ public class MerkleTreeHelper {
         this.md = md;
     }
 
-    MerkleTree create(Queue<String> transaction) {
+    public MerkleTree create(Queue<String> transaction) {
         List<Leaf> collect = transaction.stream().map(Leaf::new).collect(Collectors.toList());
         List<MerkleTree> trees = new ArrayList<>();
         for (int i = 0; i < collect.size(); i += 2) {
@@ -25,7 +25,7 @@ public class MerkleTreeHelper {
         return buildTree(trees);
     }
 
-    MerkleTree buildTree(List<MerkleTree> merkleTrees) {
+    private MerkleTree buildTree(List<MerkleTree> merkleTrees) {
         if (merkleTrees.size() == 1) {
             return merkleTrees.get(0);
         }
