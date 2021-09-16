@@ -60,17 +60,6 @@ public class MerkleTree {
 
     private String hash(String msg) {
         byte[] digest = md.digest(msg.getBytes(StandardCharsets.UTF_8));
-        return bytesToHex(digest);
-    }
-
-    private String bytesToHex(byte[] bytes) {
-        byte[] hexBytes = "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
-        byte[] hexChars = new byte[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexBytes[v >>> 4];
-            hexChars[j * 2 + 1] = hexBytes[v & 0x0F];
-        }
-        return new String(hexChars, StandardCharsets.UTF_8);
+        return HashUtil.bytesToHex(digest);
     }
 }
