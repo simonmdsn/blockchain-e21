@@ -31,7 +31,7 @@ RUN rm -rf ${BERKELEYDB_PREFIX}/docs
 # -----------------------------------------------------------------
 # install bitcoin core
 # -----------------------------------------------------------------
-FROM alpine as bitcoin-core
+FROM alpine:3.14 as bitcoin-core
 
 COPY --from=berkeleydb /opt /opt
 
@@ -71,17 +71,22 @@ RUN ./configure LDFLAGS=-L`ls -d /opt/db*`/lib/ CPPFLAGS=-I`ls -d /opt/db*`/incl
 RUN make -j4
 RUN make install
 
+# compiled stage
+FROM alpine:3.14
+
+RUN apk --no-cache add \
+  boost-filesystem \
+  boost-system \
+  boost-thread \
+  libevent \
+  libzmq \
+  su-exec
+
+COPY --from=bitcoin-core /opt /opt
+
 WORKDIR /opt/bitcoin/bin
 
-# start server in regtest mode
-RUN ./bitcoind -regtest -daemon -fallbackfee=0
+COPY application.sh ./
+RUN chmod +x application.sh
 
-# generate wallet
-RUN ./bitcoin-cli -regtest createwallet "mywallet"
-
-# generate blocks
-RUN ./bitcoin-cli -regtest -generate 101
-
-# get balance
-RUN ./bitcoin-cli -regtest getbalance
-
+CMD ["./application.sh"]
